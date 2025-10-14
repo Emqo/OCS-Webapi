@@ -1,0 +1,13 @@
+
+server:
+  port: 8080
+
+qwen:
+  api:
+    key: REPLACE_WITH_YOUR_KEY
+    url: https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation
+    model: qwen-flash
+
+spring:
+  application:
+    name: emqo-qwen-answer-api
