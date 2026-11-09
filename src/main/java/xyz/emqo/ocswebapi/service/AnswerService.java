@@ -23,6 +23,7 @@ import xyz.emqo.ocswebapi.dto.ApiResponse;
 import xyz.emqo.ocswebapi.dto.DeepSeekRequest;
 import xyz.emqo.ocswebapi.dto.DeepSeekResponse;
 import xyz.emqo.ocswebapi.dto.SearchRequest;
+import xyz.emqo.ocswebapi.util.AnswerFormatter;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -80,8 +81,10 @@ public class AnswerService {
                 return cached;
             }
 
-            // 调用DeepSeek API
-            String answer = callDeepSeekApi(buildMessages(type, request));
+            // 调用DeepSeek API, 并把返回内容清洗为 OCS 可直接使用的纯文本
+            String rawAnswer = callDeepSeekApi(buildMessages(type, request));
+            String answer = AnswerFormatter.format(type, rawAnswer, request.getOptions());
+            log.info("清洗后的答案: {}", answer);
 
             ApiResponse response = ApiResponse.builder()
                     .code(1)
@@ -136,10 +139,11 @@ public class AnswerService {
      */
     private List<DeepSeekRequest.Message> buildMessages(String type, SearchRequest request) {
         String rule = switch (type) {
-            case "single" -> "只需输出正确选项的字母(例如:A), 不要输出任何解释或其他内容。";
-            case "multiple" -> "只需输出正确选项的字母, 多个答案用#号分隔(例如:A#C), 不要输出任何解释或其他内容。";
-            case "judgement" -> "只需输出 正确 或 错误, 不要输出任何解释或其他内容。";
-            default -> "只需输出简短准确的答案本身, 不要输出任何解释或其他内容。";
+            case "single" -> "单选题: 只输出正确选项的字母(例如 A)。";
+            case "multiple" -> "多选题: 只输出正确选项的字母, 多个选项用#号分隔(例如 A#C)。";
+            case "judgement" -> "判断题: 只输出 正确 或 错误。";
+            case "completion" -> "填空题: 只输出填入的答案本身; 如果有多个空, 用#号按顺序分隔(例如 甲#乙)。";
+            default -> "只输出简短准确的答案本身。";
         };
 
         StringBuilder user = new StringBuilder();
@@ -152,7 +156,10 @@ public class AnswerService {
         List<DeepSeekRequest.Message> messages = new ArrayList<>();
         messages.add(DeepSeekRequest.Message.builder()
                 .role("system")
-                .content("你是一个网课题库答题助手。" + rule)
+                .content("你是一个网课题库答题助手。" + rule
+                        + " 只输出最终答案, 不解释、不重复题目、不加引号、不加\"答案:\"前缀。"
+                        + " 输出纯文本, 禁止任何 Markdown 语法(加粗、标题、列表、代码、表格), 不要换行。"
+                        + " 注意: # 仅用于分隔多个答案, 不要用作 Markdown 标题。")
                 .build());
         messages.add(DeepSeekRequest.Message.builder()
                 .role("user")
@@ -207,7 +214,7 @@ public class AnswerService {
             log.warn("回答因达到 max_tokens 上限被截断, 可调大 deepseek.api.max-tokens");
         }
 
-        return cleanAnswer(choice.getMessage().getContent());
+        return choice.getMessage().getContent().trim();
     }
 
     /**
@@ -223,18 +230,6 @@ public class AnswerService {
             // 非 JSON 错误体, 回退到状态码
         }
         return "DeepSeek API调用失败: HTTP " + e.getStatusCode().value();
-    }
-
-    /**
-     * 清洗答案: 去首尾空白/星号/引号与"答案:"类前缀
-     */
-    private String cleanAnswer(String answer) {
-        String cleaned = answer.trim();
-        cleaned = cleaned.replaceAll("^[\\*\\s]+|[\\*\\s]+$", "");
-        cleaned = cleaned.replaceFirst("^(正确答案|答案)\\s*[:：]", "").trim();
-        cleaned = cleaned.replaceFirst("^(正确答案|答案)(是|为)", "").trim();
-        cleaned = cleaned.replaceAll("^[\"'“”]+|[\"'“”]+$", "");
-        return cleaned.trim();
     }
 
     /**
