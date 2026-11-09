@@ -1,10 +1,10 @@
 /**
  * @Author: Emqo
- * @Date: 2025/10/14 20:19
+ * @Date: 2026/11/09
  * @FileName: ApiResponse
  * @Description:
  */
-package xyz.emqo.qwenxuexitong.dto;
+package xyz.emqo.ocswebapi.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

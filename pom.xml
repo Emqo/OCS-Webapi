@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>xyz.emqo</groupId>
-	<artifactId>Qwen-xuexitong</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>Qwen-xuexitong</name>
-	<description>Qwen-xuexitong</description>
+	<artifactId>ocs-webapi</artifactId>
+	<version>0.0.1</version>
+	<name>ocs-webapi</name>
+	<description>OCS-Webapi: 适用于OCS网课助手的基于DeepSeek的题库API</description>
 	<url/>
 	<licenses>
 		<license/>
@@ -53,6 +53,10 @@
 			<groupId>io.projectreactor</groupId>
 			<artifactId>reactor-test</artifactId>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.github.ben-manes.caffeine</groupId>
+			<artifactId>caffeine</artifactId>
 		</dependency>
         <dependency>
             <groupId>com.alibaba.fastjson2</groupId>

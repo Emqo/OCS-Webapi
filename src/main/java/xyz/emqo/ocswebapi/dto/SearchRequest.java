@@ -1,10 +1,10 @@
 /**
  * @Author: Emqo
- * @Date: 2025/10/14 20:19
+ * @Date: 2026/11/09
  * @FileName: SearchRequest
  * @Description:
  */
-package xyz.emqo.qwenxuexitong.dto;
+package xyz.emqo.ocswebapi.dto;
 
 import lombok.Data;
 
@@ -21,6 +21,7 @@ public class SearchRequest {
 
     /**
      * 题目类型: single(单选), multiple(多选), judgement(判断), completion(填空)
+     * 兼容数字形式: 1-单选, 2-多选, 3-判断, 4-填空(其余归为其他)
      */
     private String type;
 

@@ -1,10 +1,10 @@
-package xyz.emqo.qwenxuexitong;
+package xyz.emqo.ocswebapi;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class QwenXuexitongApplicationTests {
+class OcsWebapiApplicationTests {
 
 	@Test
 	void contextLoads() {

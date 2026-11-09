@@ -2,12 +2,28 @@
 server:
   port: 8080
 
-qwen:
+deepseek:
   api:
+    # 在 https://platform.deepseek.com 申请 API Key
     key: REPLACE_WITH_YOUR_KEY
-    url: https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation
-    model: qwen-flash
+    # DeepSeek 官方 OpenAI 兼容协议地址
+    url: https://api.deepseek.com/chat/completions
+    # 模型: deepseek-flash(默认, 快且便宜) / deepseek-v4-pro(更强, 更贵更慢)
+    model: deepseek-flash
+    # 采样温度(thinking 为 true 时无效, 不会发送)
+    temperature: 1.0
+    # 单次回答最大 token 数
+    max-tokens: 1024
+    # 深度思考模式: 更准但更慢、更贵
+    thinking: false
+    # 调用 DeepSeek 的响应超时(秒)
+    timeout-seconds: 60
+    cache:
+      # 内存答案缓存: 同题不重复调用 API
+      enabled: true
+      max-size: 1000
+      expire-hours: 24
 
 spring:
   application:
-    name: emqo-qwen-answer-api
+    name: ocs-webapi
