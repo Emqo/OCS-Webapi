@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>xyz.emqo</groupId>
 	<artifactId>ocs-webapi</artifactId>
-	<version>0.0.2</version>
+	<version>0.0.3</version>
 	<name>ocs-webapi</name>
 	<description>OCS-Webapi: 适用于OCS网课助手的基于DeepSeek的题库API</description>
 	<url/>

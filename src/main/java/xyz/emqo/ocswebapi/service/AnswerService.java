@@ -84,7 +84,7 @@ public class AnswerService {
             // 调用DeepSeek API, 并把返回内容清洗为 OCS 可直接使用的纯文本
             String rawAnswer = callDeepSeekApi(buildMessages(type, request));
             String answer = AnswerFormatter.format(type, rawAnswer, request.getOptions());
-            log.info("清洗后的答案: {}", answer);
+            log.debug("清洗后的答案: {}", answer);
 
             ApiResponse response = ApiResponse.builder()
                     .code(1)

@@ -18,7 +18,7 @@
 
 打包完成后，目录中包含：
 
-- `ocs-webapi-0.0.2.jar`：程序主 jar 包
+- `ocs-webapi-0.0.3.jar`：程序主 jar 包
 - `application.yml`：默认配置文件，包含示例 API key 和模型
 
 ---
@@ -65,7 +65,7 @@ spring:
 在目录下执行：
 
 ```
-java -jar ocs-webapi-0.0.2.jar
+java -jar ocs-webapi-0.0.3.jar
 ```
 
 程序启动后，会监听配置文件中指定的端口（默认 8080），提供题库接口。
